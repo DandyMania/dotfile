@@ -1,0 +1,110 @@
+"=============================================================================
+"    Description: .gvimrcサンプル設定
+"         Author: 
+"  Last Modified: 0000-00-00 00:00
+"        Version: 0.00
+"=============================================================================
+scriptencoding cp932
+"----------------------------------------
+"システム設定
+"----------------------------------------
+"エラー時の音とビジュアルベルの抑制。
+set noerrorbells
+set novisualbell
+set visualbell t_vb=
+
+if has('multi_byte_ime') || has('xim')
+  set iminsert=0 imsearch=0
+  if has('xim') && has('GUI_GTK')
+    "XIMの入力開始キー
+    "set imactivatekey=C-space
+  endif
+endif
+
+
+"----------------------------------------
+" 表示設定
+"----------------------------------------
+
+" 文字化けとか嫌なので英語にしちゃう
+source $VIMRUNTIME/delmenu.vim 
+set langmenu=none
+"set langmenu=ja_jp.utf-8
+source $VIMRUNTIME/menu.vim
+
+"英語メッセージにする
+if has("multi_lang")
+language C
+endif
+
+
+"ちょっと半透明
+gui
+set transparency=240
+
+"コマンドラインの高さ
+set cmdheight=2
+
+" 検索時のハイライト表示をESCキーを押すことによりさりげなく消す
+set hlsearch
+nmap <Esc><Esc> :nohlsearch<CR><Esc>
+
+"カラー設定:
+colorscheme wombat
+
+" 入力補完候補部分のカラーをチェンジ
+hi Pmenu guibg=#666666
+hi PmenuSel guibg=#ff00ff guifg=#222222
+hi PmenuSbar guibg=#111111
+
+"IMEの状態をカラー表示
+if has('multi_byte_ime')
+  highlight Cursor guifg=NONE guibg=Green
+  highlight CursorIM guifg=NONE guibg=Purple
+endif
+
+"フォント設定
+"フォントは英語名で指定すると問題が起きにくくなります
+if has('xfontset')
+"  set guifontset=a14,r14,k14
+elseif has('unix')
+  set guifont=Monospace\ 9
+  set linespace=2
+elseif has('mac')
+ set guifont=Osaka-Mono:10
+elseif has('win32') || has('win64')
+  set guifont=Ricty\ Diminished\ Regular:h12:b
+  "set guifont=メイリオ:h12:cSHIFTJIS
+endif
+
+"印刷用フォント
+if has('printer')
+  if has('win32') || has('win64')
+"    set printfont=MS_Mincho:h12:cSHIFTJIS
+"    set printfont=MS_Gothic:h12:cSHIFTJIS
+  endif
+endif
+
+""""""""""""""""""""""""""""""
+"Window位置の保存と復帰
+""""""""""""""""""""""""""""""
+" save window position and window size {
+let s:save_size = '~/.vim/savesize.vim'
+au GUIEnter * if filereadable(expand(s:save_size)) | execute 'source ' . s:save_size | endif
+function! SaveSizes()
+	let x0 = getwinposx()
+	let y0 = getwinposy()
+	let x1 = &columns
+	let y1 = &lines
+	execute 'redir! > ' . s:save_size
+	echo 'if exists(":winpos") == 2'
+	echo "\t:winpos" x0 y0
+	echo "endif"
+	echo "set columns=" . x1
+	echo "set lines=" . y1
+	redir END
+endfunction
+au VimLeave * if has("gui_running") | silent call SaveSizes() | endif
+" }
+
+

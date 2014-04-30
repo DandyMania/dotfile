@@ -1,9 +1,3 @@
-"=============================================================================
-"    Description: .gvimrcサンプル設定
-"         Author: 
-"  Last Modified: 0000-00-00 00:00
-"        Version: 0.00
-"=============================================================================
 scriptencoding cp932
 "----------------------------------------
 "システム設定
@@ -85,9 +79,9 @@ if has('printer')
   endif
 endif
 
-""""""""""""""""""""""""""""""
+"----------------------------------------
 "Window位置の保存と復帰
-""""""""""""""""""""""""""""""
+"----------------------------------------
 " save window position and window size {
 let s:save_size = '~/.vim/savesize.vim'
 au GUIEnter * if filereadable(expand(s:save_size)) | execute 'source ' . s:save_size | endif

@@ -641,3 +641,8 @@ let g:memolist_template_dir_path = "~/.vim/template/memolist"
 
 "FuzzyFinder.vim
 nmap mf :FufFile <C-r>=expand(g:memolist_path."/")<CR><CR>
+
+
+
+
+

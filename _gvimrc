@@ -39,6 +39,11 @@ set transparency=240
 "コマンドラインの高さ
 set cmdheight=2
 
+
+"改行文字数
+" vim74/vimrc_example.vim autocmd FileType text setlocal textwidth=78 の行をコメントアウト
+set textwidth=250
+
 " 検索時のハイライト表示をESCキーを押すことによりさりげなく消す
 set hlsearch
 nmap <Esc><Esc> :nohlsearch<CR><Esc>

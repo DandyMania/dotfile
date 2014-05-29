@@ -23,7 +23,6 @@ NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'mattn/emmet-vim'
-NeoBundle 'open-browser.vim'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'tell-k/vim-browsereload-mac'
 NeoBundle 'hail2u/vim-css3-syntax'
@@ -75,6 +74,10 @@ NeoBundle 'glidenote/memolist.vim'
 NeoBundle 'L9'
 NeoBundle 'vim-scripts/FuzzyFinder'
 
+"Markdown
+NeoBundle 'plasticboy/vim-markdown'
+NeoBundle 'kannokanno/previm'
+NeoBundle 'tyru/open-browser.vim'
 
 set t_Co=256
 
@@ -141,7 +144,7 @@ set shiftround
 " 補完の際の大文字小文字の区別しない
 set infercase
 " 文字がない場所にもカーソルを移動できるようにする
-set virtualedit=all
+"set virtualedit=all
 " 変更中のファイルでも、保存しないで他のファイルを表示
 set hidden
 " 新しく開く代わりにすでに開いてあるバッファを開く
@@ -642,7 +645,7 @@ let g:memolist_template_dir_path = "~/.vim/template/memolist"
 "FuzzyFinder.vim
 nmap mf :FufFile <C-r>=expand(g:memolist_path."/")<CR><CR>
 
-
-
+"vim-markdown
+au BufRead,BufNewFile *.txt set filetype=markdown
 
 

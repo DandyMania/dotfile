@@ -194,17 +194,13 @@ set clipboard+=unnamed
 set listchars=eol:$,tab:~\ ,trail:_,extends:\
 "標準タブは4
 set tabstop=4
-set softtabstop=4
+"set softtabstop=4
 "自動的にインデントする
 set autoindent
 "実はスマートはウザかったりする。
 "set smartindent
 " タブを挿入するとき、代わりに空白を使わない
 set noexpandtab
-
-" python
-au BufNewFile,BufRead *.py set noexpandtab tabstop=4 shiftwidth=
-
 
 "空行のインデントを勝手に消さない
 nnoremap o oX<C-h>

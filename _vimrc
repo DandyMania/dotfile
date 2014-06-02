@@ -145,12 +145,14 @@ set matchtime=3
 set nowrap
 " 入力されているテキストの最大幅を無効にする
 set textwidth=0
+" 80文字目にラインを入れる
+set colorcolumn=80
 " 不可視文字を表示
-"set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
-" インデントをshiftwidthの倍数に丸める
+set listchars=tab:~\ ,trail:_,extends:»,precedes:«,nbsp:%,eol:↲
 " タブとか改行を示す文字列 eol(改行)は背景色違いのスペースにする。
-set listchars=eol:$,tab:~\ ,trail:_,extends:\
+"set listchars=eol:$,tab:~\ ,trail:_,extends:\
 
+" インデントをshiftwidthの倍数に丸める
 set shiftround
 " 補完の際の大文字小文字の区別しない
 set infercase

@@ -202,6 +202,10 @@ set autoindent
 " タブを挿入するとき、代わりに空白を使わない
 set noexpandtab
 
+" python
+au BufNewFile,BufRead *.py set noexpandtab tabstop=4 shiftwidth=
+
+
 "空行のインデントを勝手に消さない
 nnoremap o oX<C-h>
 nnoremap O OX<C-h>

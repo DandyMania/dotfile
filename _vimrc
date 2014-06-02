@@ -46,10 +46,7 @@ NeoBundle 'itchyny/lightline.vim'
 " Perl関連プラグインをバンドル
 NeoBundle 'petdance/vim-perl'
 NeoBundle 'hotchpotch/perldoc-vim'
-" シンタックス系プラグインをバンドル
-"NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'Shougo/neocomplcache.vim'
-NeoBundle 'Shougo/neosnippet'
+
 
 NeoBundle 'osyo-manga/vim-over'
 
@@ -78,6 +75,17 @@ NeoBundle 'vim-scripts/FuzzyFinder'
 NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'tyru/open-browser.vim'
+
+
+" インテリセンス関連
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neocomplete.vim'
+"NeoBundle 'Shougo/neocomplcache.vim'
+" Install clang_complete
+"NeoBundle 'Rip-Rip/clang_complete'
+NeoBundle 'osyo-manga/vim-reunions'
+NeoBundle 'osyo-manga/vim-marching'
+
 
 set t_Co=256
 
@@ -648,4 +656,37 @@ nmap mf :FufFile <C-r>=expand(g:memolist_path."/")<CR><CR>
 "vim-markdown
 au BufRead,BufNewFile *.txt set filetype=markdown
 
+"------------------------------------------------
+"Clang を使用して非同期で C++ のコード補完
+"------------------------------------------------
+" clang コマンドの設定
+let g:marching_clang_command = "C:\Program Files (x86)\LLVM\bin"
+
+" オプションを追加する場合
+let g:marching_clang_command_option="-std=c++1y"
+
+" インクルードディレクトリのパスを設定
+let g:marching_include_paths = [
+\   "C:/MinGW/lib/gcc/mingw32/4.8.1/include"
+\]
+
+" neocomplete.vim と併用して使用する場合
+let g:marching_enable_neocomplete = 1
+
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
+endif
+
+let g:neocomplete#force_omni_input_patterns.cpp =
+    \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+
+" 処理のタイミングを制御する
+" 短いほうがより早く補完ウィンドウが表示される
+set updatetime=200
+
+" オムニ補完時に補完ワードを挿入したくない場合
+imap <buffer> <C-x><C-o> <Plug>(marching_start_omni_complete)
+
+" キャッシュを削除してからオムに補完を行う
+imap <buffer> <C-x><C-x><C-o> <Plug>(marching_force_start_omni_complete)
 

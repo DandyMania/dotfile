@@ -146,8 +146,11 @@ set nowrap
 " 入力されているテキストの最大幅を無効にする
 set textwidth=0
 " 不可視文字を表示
-set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
+"set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%,eol:↲
 " インデントをshiftwidthの倍数に丸める
+" タブとか改行を示す文字列 eol(改行)は背景色違いのスペースにする。
+set listchars=eol:$,tab:~\ ,trail:_,extends:\
+
 set shiftround
 " 補完の際の大文字小文字の区別しない
 set infercase
@@ -190,8 +193,6 @@ set title
 " ヤンクをクリップボードへ送り込む
 set clipboard+=unnamed
 
-" タブとか改行を示す文字列 eol(改行)は背景色違いのスペースにする。
-set listchars=eol:$,tab:~\ ,trail:_,extends:\
 "標準タブは4
 set tabstop=4
 "set softtabstop=4
@@ -451,6 +452,15 @@ nnoremap sub :OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
 nnoremap subp y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!', 'g')<CR>!!gI<Left><Left><Left>
 
 " }}}
+
+
+"================================
+" python用設定
+"================================
+autocmd BufNewFile,BufRead *.py setl autoindent
+autocmd BufNewFile,BufRead *.py setl smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+autocmd BufNewFile,BufRead *.py setl tabstop=4 noexpandtab shiftwidth=4 softtabstop=4
+
 
 "================================
 " Perl用設定

@@ -86,6 +86,7 @@ NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'osyo-manga/vim-reunions'
 NeoBundle 'osyo-manga/vim-marching'
 
+NeoBundle 'osyo-manga/vim-reanimate'
 
 set t_Co=256
 
@@ -701,4 +702,65 @@ imap <buffer> <C-x><C-o> <Plug>(marching_start_omni_complete)
 
 " キャッシュを削除してからオムに補完を行う
 imap <buffer> <C-x><C-x><C-o> <Plug>(marching_force_start_omni_complete)
+
+"vim reanimate
+" 保存先のディレクトリ
+let g:reanimate_save_dir = $VIM."/.vim/save_point"
+
+" デフォルトの保存名
+let g:reanimate_default_save_name = "latest"
+
+" sessionoptions
+let g:reanimate_sessionoptions="curdir,folds,globals,help,localoptions,slash,tabpages,winsize"
+
+" 無効にする機能があれば
+" let g:reanimate_disables = ["reanimate_session", "reanimate_viminfo", "reanimate_window"]
+
+
+" ステータスラインに現在の保存名を出力
+function! Last_point()
+    return reanimate#is_saved() ? reanimate#last_point() : "no save"
+endfunction
+set statusline=%=[%{Last_point()}\]\[%{(&fenc!=''?&fenc:&enc)}/%{&ff}]\[%03l,%03v]
+
+" オートコマンド
+augroup SavePoint
+    autocmd!
+    " 終了時に保存を行う
+    autocmd VimLeavePre * ReanimateSave
+
+    " バッファに書き込む時に一緒の保存する
+"    autocmd BufWritePost * ReanimateSave
+    
+    " CursorHold 時には ReanimateSaveCursorHold を使用する
+"     autocmd CursorHold * ReanimateSaveCursorHold
+    
+    " 自動的に復元する場合
+"     autocmd VimEnter * ReanimateLoad
+augroup END
+
+
+" ユーザ側で reanimate.vim のイベントに処理を hook する
+let s:event = {
+\    "name" : "user_event",
+\}
+
+function! s:event.load_pre(...)
+    " 読み込み前に全てのバッファを保存
+    :wall
+    " 復元前にタブを削除する
+    :tabonly
+endfunction
+
+function! s:event.save_pre(...)
+    " 保存前に args を削除する
+    try
+        :execute "argd *"
+    catch
+    endtry
+endfunction
+
+call reanimate#hook(s:event)
+unlet s:event
+
 

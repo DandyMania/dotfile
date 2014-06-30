@@ -49,6 +49,8 @@ NeoBundle 'hotchpotch/perldoc-vim'
 
 " poweshell
 NeoBundle 'PProvost/vim-ps1'
+NeoBundle 'cd01/poshcomplete-vim'
+
 
 NeoBundle 'osyo-manga/vim-over'
 

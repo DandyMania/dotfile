@@ -47,6 +47,8 @@ NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'petdance/vim-perl'
 NeoBundle 'hotchpotch/perldoc-vim'
 
+" poweshell
+NeoBundle 'PProvost/vim-ps1'
 
 NeoBundle 'osyo-manga/vim-over'
 
@@ -338,26 +340,26 @@ endif
 " indent-guides を有効にする
 au VimEnter * IndentGuidesEnable
 
-" 1インデント目からガイドする
-let g:indent_guides_start_level = 1
+" 2インデント目からガイドする
+let g:indent_guides_start_level = 2
 
 " 自動カラーを無効にして手動で設定する
 let g:indent_guides_auto_colors = 0
 
 " 奇数インデントのガイドカラー
-hi IndentGuidesOdd  ctermbg=green
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#444433 ctermbg=black
 
 " 偶数インデントのガイドカラー
-hi IndentGuidesEven ctermbg=black
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#333344 ctermbg=darkgray
 
 " ハイライト色の変化の幅 (Terminal では未サポート)
 let g:indent_guides_color_change_percent = 20
 
 " ガイドの幅
-let g:indent_guides_guide_size = 1
+let g:indent_guides_guide_size = 2
 
 " ガイド幅をインデント幅に合わせる
-let g:indent_guides_guide_size = &tabstop
+"let g:indent_guides_guide_size = &tabstop
 
 "================================
 " PHP用設定
@@ -543,6 +545,12 @@ inoremap <C-a> @
 " \ + rでスクリプト実行
 nmap <Leader>r <plug>(quickrun)
 
+
+"================================
+" powershell
+"================================
+:let g:ps1_nofold_blocks = 1
+:let g:ps1_nofold_sig = 1
 
 "================================
 " json整形

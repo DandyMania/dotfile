@@ -325,6 +325,7 @@ nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
 map <silent>    <F2>    :bp<cr>
 map <silent>    <F3>    :bn<cr>
 nmap bb :ls<CR>:buf 
+nmap qq :close<CR>
 
 " :e などでファイルを開く際にフォルダが存在しない場合は自動作成
 function! s:mkdir(dir, force)

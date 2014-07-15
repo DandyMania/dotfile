@@ -29,8 +29,6 @@ NeoBundle 'Shougo/vimfiler'
 NeoBundle 'VimClojure'
 NeoBundle 'Shougo/vimshell'
 NeoBundle 'jpalardy/vim-slime'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'tell-k/vim-browsereload-mac'
@@ -67,7 +65,11 @@ NeoBundle 'osyo-manga/vim-over'
 " 実行プラグインをバンドル
 NeoBundle 'thinca/vim-quickrun'
 " 編集履歴管理
-NeoBundle "sjl/gundo.vim"
+NeoBundleLazy "sjl/gundo.vim", {
+      \ "autoload": {
+      \   "commands": ['GundoToggle'],
+      \}}
+nnoremap <Leader>g :GundoToggle<CR>
 "ツールバーを今風に
 NeoBundle 'istepura/vim-toolbar-icons-silk'
 "インデントカラーリング
@@ -91,8 +93,11 @@ NeoBundle 'tyru/open-browser.vim'
 
 
 " インテリセンス関連
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neocomplete.vim'
+NeoBundleLazy 'Shougo/neosnippet.vim', {
+    \ "autoload": {"insert": 1}}
+NeoBundleLazy 'Shougo/neocomplete.vim', {
+    \ "autoload": {"insert": 1}}
+
 "NeoBundle 'Shougo/neocomplcache.vim'
 " Install clang_complete
 "NeoBundle 'Rip-Rip/clang_complete'
@@ -100,6 +105,58 @@ NeoBundle 'osyo-manga/vim-reunions'
 NeoBundle 'osyo-manga/vim-marching'
 
 NeoBundle 'osyo-manga/vim-reanimate'
+
+NeoBundle 'scrooloose/nerdtree'
+"構文エラー表示
+NeoBundle "scrooloose/syntastic", {
+      \ "build": {
+      \   "mac": ["pip install flake8", "npm -g install coffeelint"],
+      \   "unix": ["pip install flake8", "npm -g install coffeelint"],
+      \ }}
+
+
+"=====================================
+"python向け補完・リファクタリング
+"=====================================
+"
+"" Djangoを正しくVimで読み込めるようにする
+NeoBundleLazy "lambdalisue/vim-django-support", {
+      \ "autoload": {
+      \   "filetypes": ["python", "python3", "djangohtml"]
+      \ }}
+" Vimで正しくvirtualenvを処理できるようにする
+NeoBundleLazy "jmcantrell/vim-virtualenv", {
+      \ "autoload": {
+      \   "filetypes": ["python", "python3", "djangohtml"]
+      \ }}
+
+" 補完・リファクタリング
+NeoBundleLazy "davidhalter/jedi-vim", {
+      \ "autoload": {
+      \   "filetypes": ["python", "python3", "djangohtml"],
+     \ },
+      \ "build": {
+      \   "mac": "pip install jedi",
+      \   "unix": "pip install jedi",
+      \ }}
+let s:hooks = neobundle#get_hooks("jedi-vim")
+function! s:hooks.on_source(bundle)
+  " jediにvimの設定を任せると'completeopt+=preview'するので
+  " 自動設定機能をOFFにし手動で設定を行う
+  let g:jedi#auto_vim_configuration = 0
+  " 補完の最初の項目が選択された状態だと使いにくいためオフにする
+  let g:jedi#popup_select_first = 0
+  " quickrunと被るため大文字に変更
+  let g:jedi#rename_command = '<Leader>R'
+  " gundoと被るため大文字に変更 (2013-06-24 10:00 追記）
+  let g:jedi#goto_command = '<Leader>G'
+endfunction
+
+
+
+" インストールされていないプラグインのチェックおよびダウンロード
+NeoBundleCheck
+
 
 set t_Co=256
 

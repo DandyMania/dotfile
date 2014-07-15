@@ -103,7 +103,20 @@ NeoBundleLazy 'Shougo/neocomplete.vim', {
 NeoBundle 'osyo-manga/vim-reunions'
 NeoBundle 'osyo-manga/vim-marching'
 
+"ウィンドウ位置保存
 NeoBundle 'osyo-manga/vim-reanimate'
+
+" ハイライト
+NeoBundle 't9md/vim-quickhl'
+nmap <Space>m <Plug>(quickhl-manual-this)
+xmap <Space>m <Plug>(quickhl-manual-this)
+nmap <Space>M <Plug>(quickhl-manual-reset)
+xmap <Space>M <Plug>(quickhl-manual-reset)
+
+nmap <Space>j <Plug>(quickhl-cword-toggle)
+nmap <Space>] <Plug>(quickhl-tag-toggle)
+map H <Plug>(operator-quickhl-manual-this-motion)
+
 
 NeoBundle 'scrooloose/nerdtree'
 "構文エラー表示

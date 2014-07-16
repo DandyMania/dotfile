@@ -5,6 +5,8 @@ filetype off
 
 
 
+
+
 "================================
 " neobundleでプラグインを管理
 "================================
@@ -23,9 +25,24 @@ NeoBundle 'Shougo/vimproc', {
   \ },
 \ }
 
-" 以下のプラグインをバンドル
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler'
+nnoremap <Leader>e :VimFilerExplorer<CR>
+let g:vimfiler_enable_auto_cd = 1
+let g:vimfiler_as_default_explorer = 1
+"mru,reg,buf
+noremap :um :Unite file_mru -buffer-name=file_mru
+noremap :ur :Unite register -buffer-name=register
+noremap :ub :Unite buffer -buffer-name=buffer
+nnoremap <C-u>m  :Unite file_mru<CR>
+
+
+" エディタリスタート
+NeoBundle 'tyru/restart.vim'
+let g:restart_sessionoptions
+    \ = 'blank,buffers,curdir,folds,help,localoptions,tabpages'
+
+
 NeoBundle 'VimClojure'
 NeoBundle 'Shougo/vimshell'
 NeoBundle 'jpalardy/vim-slime'
@@ -69,6 +86,7 @@ NeoBundleLazy "sjl/gundo.vim", {
       \   "commands": ['GundoToggle'],
       \}}
 nnoremap <Leader>g :GundoToggle<CR>
+
 "ツールバーを今風に
 NeoBundle 'istepura/vim-toolbar-icons-silk'
 "インデントカラーリング
@@ -90,12 +108,23 @@ NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'tyru/open-browser.vim'
 
-
 " インテリセンス関連
 NeoBundleLazy 'Shougo/neosnippet.vim', {
     \ "autoload": {"insert": 1}}
 NeoBundleLazy 'Shougo/neocomplete.vim', {
     \ "autoload": {"insert": 1}}
+
+
+" C/C++
+NeoBundleLazy 'vim-jp/cpp-vim', {
+            \ 'autoload' : {'filetypes' : 'cpp'}
+            \ }
+
+NeoBundleLazy 'Rip-Rip/clang_complete', {
+    \ 'autoload' : {
+    \ 'filetypes' : ['c', 'cpp'],
+    \ },
+    \ }
 
 "NeoBundle 'Shougo/neocomplcache.vim'
 " Install clang_complete
@@ -119,6 +148,22 @@ map H <Plug>(operator-quickhl-manual-this-motion)
 
 
 NeoBundle 'scrooloose/nerdtree'
+ 
+nmap <silent> <C-e>      :NERDTreeToggle<CR>
+vmap <silent> <C-e> <Esc>:NERDTreeToggle<CR>
+omap <silent> <C-e>      :NERDTreeToggle<CR>
+imap <silent> <C-e> <Esc>:NERDTreeToggle<CR>
+cmap <silent> <C-e> <C-u>:NERDTreeToggle<CR>
+"autocmd vimenter * if !argc() | NERDTree | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+let g:NERDTreeIgnore=['\.clean$', '\.swp$', '\.bak$', '\~$']
+let g:NERDTreeShowHidden=1
+let g:NERDTreeMinimalUI=1
+let g:NERDTreeDirArrows=0
+let g:NERDTreeMouseMode=2
+let g:NERDTreeShowBookmarks=1
+
+
 "構文エラー表示
 NeoBundle "scrooloose/syntastic", {
       \ "build": {
@@ -158,10 +203,8 @@ function! s:hooks.on_source(bundle)
   let g:jedi#auto_vim_configuration = 0
   " 補完の最初の項目が選択された状態だと使いにくいためオフにする
   let g:jedi#popup_select_first = 0
-  " quickrunと被るため大文字に変更
-  let g:jedi#rename_command = '<Leader>R'
-  " gundoと被るため大文字に変更 (2013-06-24 10:00 追記）
-  let g:jedi#goto_command = '<Leader>G'
+  let g:jedi#rename_command = '<Space>r'
+  let g:jedi#goto_assignments_command = '<Space>g'
 endfunction
 
 
@@ -174,18 +217,34 @@ set t_Co=256
 
 
 "================================
-" ファイラー関連
+" vimrcが保存されたら勝手に再起動
 "================================
-nnoremap <Leader>e :VimFilerExplorer<CR>
-nnoremap <Leader>g :GundoToggle<CR>
-let g:vimfiler_enable_auto_cd = 1
-let g:vimfiler_as_default_explorer = 1
-"mru,reg,buf
-noremap :um :Unite file_mru -buffer-name=file_mru
-noremap :ur :Unite register -buffer-name=register
-noremap :ub :Unite buffer -buffer-name=buffer
-nnoremap <C-u>m  :Unite file_mru<CR>
-" 環境設定系
+"augroup MyAutoCmd
+"    autocmd!
+"augroup END
+
+"if !has('gui_running') && !(has('win32') || has('win64'))
+    " .vimrcの再読込時にも色が変化するようにする
+"    autocmd MyAutoCmd BufWritePost $MYVIMRC nested source $MYVIMRC
+"else
+    " .vimrcの再読込時にも色が変化するようにする
+"    autocmd MyAutoCmd BufWritePost $MYVIMRC source $MYVIMRC | 
+"                \if has('gui_running') | source $MYGVIMRC  
+"    autocmd MyAutoCmd BufWritePost $MYGVIMRC if has('gui_running') | source $MYGVIMRC
+"endif
+
+" auto reload .vimrc
+"augroup source-vimrc
+"  autocmd!
+"  autocmd BufWritePost *vimrc :bufdo source $MYVIMRC | set foldmethod=marker
+"  autocmd BufWritePost *gvimrc if has('gui_running') source $MYGVIMRC
+"augroup END
+
+
+
+"--------------------------------------------------
+" エディタ設定
+"--------------------------------------------------
 " シンタックスハイライト
 syntax on
 " エンコード
@@ -288,57 +347,6 @@ set autoindent
 " タブを挿入するとき、代わりに空白を使わない
 set noexpandtab
 
-"空行のインデントを勝手に消さない
-nnoremap o oX<C-h>
-nnoremap O OX<C-h>
-inoremap <CR> <CR>X<C-h>
-
-" w!! でスーパーユーザーとして保存（sudoが使える環境限定）
-cmap w!! w !sudo tee > /dev/null %
-" 入力モード中に素早くJJと入力した場合はESCとみなす
-inoremap jj <Esc>
-" ESCを二回押すことでハイライトを消す
-nmap <silent> <Esc><Esc> :nohlsearch<CR>
-" カーソル下の単語を * で検索
-vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<CR><CR>
-" 検索後にジャンプした際に検索単語を画面中央に持ってくる
-nnoremap n nzz
-nnoremap N Nzz
-nnoremap * *zz
-nnoremap # #zz
-nnoremap g* g*zz
-nnoremap g# g#zz
-" j, k による移動を折り返されたテキストでも自然に振る舞うように変更
-nnoremap j gj
-nnoremap k gk
-" vを二回で行末まで選択
-vnoremap v $h
-" TABにて対応ペアにジャンプ
-nnoremap &lt;Tab&gt; %
-vnoremap &lt;Tab&gt; %
-" Ctrl + hjkl でウィンドウ間を移動
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-" Shift + 矢印でウィンドウサイズを変更
-nnoremap <S-Left>  <C-w><<CR>
-nnoremap <S-Right> <C-w><CR>
-nnoremap <S-Up>    <C-w>-<CR>
-nnoremap <S-Down>  <C-w>+<CR>
-" T + ? で各種設定をトグル
-nnoremap [toggle] <Nop>
-nmap T [toggle]
-nnoremap <silent> [toggle]s :setl spell!<CR>:setl spell?<CR>
-nnoremap <silent> [toggle]l :setl list!<CR>:setl list?<CR>
-nnoremap <silent> [toggle]t :setl expandtab!<CR>:setl expandtab?<CR>
-nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
-
-"バッファを切り替えたり
-map <silent>    <F2>    :bp<cr>
-map <silent>    <F3>    :bn<cr>
-nmap bb :ls<CR>:buf 
-nmap qq :close<CR>
 
 " :e などでファイルを開く際にフォルダが存在しない場合は自動作成
 function! s:mkdir(dir, force)
@@ -366,7 +374,78 @@ let s:local_vimrc = expand('~/.vimrc.local')
 if filereadable(s:local_vimrc)
     execute 'source ' . s:local_vimrc
 endif
- 
+
+
+"---------------------------------------------------
+" キーマップ
+"---------------------------------------------------
+"空行のインデントを勝手に消さない
+nnoremap o oX<C-h>
+nnoremap O OX<C-h>
+inoremap <CR> <CR>X<C-h>
+
+" w!! でスーパーユーザーとして保存（sudoが使える環境限定）
+cmap w!! w !sudo tee > /dev/null %
+" 入力モード中に素早くJJと入力した場合はESCとみなす
+inoremap jj <Esc>
+" ESCを二回押すことでハイライトを消す
+nmap <silent> <Esc><Esc> :nohlsearch<CR>
+" カーソル下の単語を * で検索
+vnoremap <silent> * "vy/\V<C-r>=substitute(escape(@v, '\/'), "\n", '\\n', 'g')<CR><CR>
+" 検索後にジャンプした際に検索単語を画面中央に持ってくる
+nnoremap n nzz
+nnoremap N Nzz
+nnoremap * *zz
+nnoremap # #zz
+nnoremap g* g*zz
+nnoremap g# g#zz
+" vを二回で行末まで選択
+vnoremap v $h
+" TABにて対応ペアにジャンプ
+nnoremap &lt;Tab&gt; %
+vnoremap &lt;Tab&gt; %
+" Shift + 矢印でウィンドウサイズを変更
+nnoremap <S-Left>  <C-w><<CR>
+nnoremap <S-Right> <C-w><CR>
+nnoremap <S-Up>    <C-w>-<CR>
+nnoremap <S-Down>  <C-w>+<CR>
+" T + ? で各種設定をトグル
+nnoremap [toggle] <Nop>
+nmap T [toggle]
+nnoremap <silent> [toggle]s :setl spell!<CR>:setl spell?<CR>
+nnoremap <silent> [toggle]l :setl list!<CR>:setl list?<CR>
+nnoremap <silent> [toggle]t :setl expandtab!<CR>:setl expandtab?<CR>
+nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
+
+"バッファを切り替えたり
+map <silent>    <F2>    :bp<cr>
+map <silent>    <F3>    :bn<cr>
+nmap bb :ls<CR>:buf 
+nmap qq :close<CR>
+
+"バッファの末尾まで移動したら先頭に戻る
+"http://d.hatena.ne.jp/osyo-manga/20140703/1404382869
+function! Up(key)
+    if line(".") == 1
+        return ":call cursor(line('$'), col('.'))\<CR>"
+    else
+        return a:key
+    endif
+endfunction
+
+
+function! Down(key)
+    if line(".") == line("$")
+        return ":call cursor(1, col('.'))\<CR>"
+    else
+        return a:key
+    endif
+endfunction
+
+
+nnoremap <expr><silent> k Up("gk")
+nnoremap <expr><silent> j Down("gj")
+
 " /{pattern}の入力中は「/」をタイプすると自動で「\/」が、
 " ?{pattern}の入力中は「?」をタイプすると自動で「\?」が 入力されるようになる
 cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
@@ -377,9 +456,9 @@ else
     set clipboard& clipboard+=unnamed,autoselect
 endif
  
-"表示行単位で行移動する
-nnoremap <silent> j gj
-nnoremap <silent> k gk
+"表示行単位で行移動する(行末で折り返さなくしたので不要)
+"nnoremap <silent> j gj
+"nnoremap <silent> k gk
 "インサートモードでも移動
 inoremap <c-d> <delete>
 inoremap <c-j> <down>
@@ -402,28 +481,6 @@ nnoremap <Space>.   :<C-u>edit   $MYVIMRC<Enter>
 nnoremap <Space>s.  :<C-u>source $MYVIMRC<Enter>
 nnoremap <Space>g.  :<C-u>edit   $MYGVIMRC<Enter>
 noremap  <Space>gs. :<C-u>source $MYGVIMRC<Enter>
-
-" Set augroup.
-augroup MyAutoCmd
-    autocmd!
-augroup END
-
-if !has('gui_running') && !(has('win32') || has('win64'))
-    " .vimrcの再読込時にも色が変化するようにする
-    autocmd MyAutoCmd BufWritePost $MYVIMRC nested source $MYVIMRC
-else
-    " .vimrcの再読込時にも色が変化するようにする
-    autocmd MyAutoCmd BufWritePost $MYVIMRC source $MYVIMRC | 
-                \if has('gui_running') | source $MYGVIMRC  
-    autocmd MyAutoCmd BufWritePost $MYGVIMRC if has('gui_running') | source $MYGVIMRC
-endif
-
-" auto reload .vimrc
-augroup source-vimrc
-  autocmd!
-  autocmd BufWritePost *vimrc :bufdo source $MYVIMRC | set foldmethod=marker
-  autocmd BufWritePost *gvimrc if has('gui_running') source $MYGVIMRC
-augroup END
 
 
 "================================
@@ -509,6 +566,14 @@ if neobundle#is_installed('neocomplete')
 	    let g:neocomplete#keyword_patterns = {}
 	endif
 	let g:neocomplete#keyword_patterns._ = '\h\w*'
+	
+	" インサートモードで上下移動したときに引っかかるので
+	inoremap <expr><c-j> pumvisible() ? neocomplete#close_popup()."\<c-j>" : "\<c-j>"
+	inoremap <expr><c-k> pumvisible() ? neocomplete#close_popup()."\<c-k>" : "\<c-k>"
+	inoremap <expr><Up> pumvisible() ? neocomplete#close_popup()."\<Up>" : "\<Up>"
+	inoremap <expr><Down> pumvisible() ? neocomplete#close_popup()."\<Down>" : "\<Down>"
+
+	
 elseif neobundle#is_installed('neocomplcache')
 	" neocomplcache用設定
 	let g:neocomplcache_enable_at_startup = 1
@@ -523,8 +588,6 @@ elseif neobundle#is_installed('neocomplcache')
 endif
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-
-
 
 "================================
 " yankround {{{
@@ -568,29 +631,29 @@ autocmd BufNewFile,BufRead *.py setl tabstop=4 noexpandtab shiftwidth=4 softtabs
 "================================
 " Perl用設定
 "================================
-autocmd BufNewFile,BufRead *.psgi   set filetype=perl
-autocmd BufNewFile,BufRead *.t      set filetype=perl
+"autocmd BufNewFile,BufRead *.psgi   set filetype=perl
+"autocmd BufNewFile,BufRead *.t      set filetype=perl
 " Enable snipMate compatibility feature.↲
-let g:neosnippet#enable_snipmate_compatibility = 1
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+"let g:neosnippet#enable_snipmate_compatibility = 1
+"imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+"smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+"xmap <C-k>     <Plug>(neosnippet_expand_target)
 " SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
+"imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"\ "\<Plug>(neosnippet_expand_or_jump)"
+"\: pumvisible() ? "\<C-n>" : "\<TAB>"
+"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"\ "\<Plug>(neosnippet_expand_or_jump)"
+"\: "\<TAB>"
  
 " For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
-" Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/snippets/snippets'
-" Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = { 'default'    : '', 'perl'       : $HOME . '/.vim/dict/perl.dict' }
+"if has('conceal')
+"  set conceallevel=2 concealcursor=i
+"endif
+"" Tell Neosnippet about the other snippets
+"let g:neosnippet#snippets_directory='~/.vim/snippets/snippets'
+"" Define dictionary.
+"let g:neocomplcache_dictionary_filetype_lists = { 'default'    : '', 'perl'       : $HOME . '/.vim/dict/perl.dict' }
  
  
 "================================
@@ -809,6 +872,7 @@ imap <buffer> <C-x><C-o> <Plug>(marching_start_omni_complete)
 " キャッシュを削除してからオムに補完を行う
 imap <buffer> <C-x><C-x><C-o> <Plug>(marching_force_start_omni_complete)
 
+
 "vim reanimate
 " 保存先のディレクトリ
 let g:reanimate_save_dir = $VIM."/.vim/save_point"
@@ -829,44 +893,45 @@ function! Last_point()
 endfunction
 set statusline=%=[%{Last_point()}\]\[%{(&fenc!=''?&fenc:&enc)}/%{&ff}]\[%03l,%03v]
 
-" オートコマンド
-augroup SavePoint
-    autocmd!
-    " 終了時に保存を行う
-    autocmd VimLeavePre * ReanimateSave
-
-    " バッファに書き込む時に一緒の保存する
-"    autocmd BufWritePost * ReanimateSave
-    
-    " CursorHold 時には ReanimateSaveCursorHold を使用する
-"     autocmd CursorHold * ReanimateSaveCursorHold
-    
-    " 自動的に復元する場合
-"     autocmd VimEnter * ReanimateLoad
-augroup END
-
-
-" ユーザ側で reanimate.vim のイベントに処理を hook する
-let s:event = {
-\    "name" : "user_event",
-\}
-
-function! s:event.load_pre(...)
-    " 読み込み前に全てのバッファを保存
-    :wall
-    " 復元前にタブを削除する
-    :tabonly
-endfunction
-
-function! s:event.save_pre(...)
-    " 保存前に args を削除する
-    try
-        :execute "argd *"
-    catch
-    endtry
-endfunction
-
-call reanimate#hook(s:event)
-unlet s:event
+"終了時に毎回上書きするか聞いてきてうざいのでコメントアウト
+"" オートコマンド
+"augroup SavePoint
+"    autocmd!
+"    " 終了時に保存を行う
+"    autocmd VimLeavePre * ReanimateSave
+"
+"    " バッファに書き込む時に一緒の保存する
+""    autocmd BufWritePost * ReanimateSave
+"    
+"    " CursorHold 時には ReanimateSaveCursorHold を使用する
+""     autocmd CursorHold * ReanimateSaveCursorHold
+"    
+"    " 自動的に復元する場合
+""     autocmd VimEnter * ReanimateLoad
+"augroup END
+"
+"
+"" ユーザ側で reanimate.vim のイベントに処理を hook する
+"let s:event = {
+"\    "name" : "user_event",
+"\}
+"
+"function! s:event.load_pre(...)
+"    " 読み込み前に全てのバッファを保存
+"    :wall
+"    " 復元前にタブを削除する
+"    :tabonly
+"endfunction
+"
+"function! s:event.save_pre(...)
+"    " 保存前に args を削除する
+"    try
+"        :execute "argd *"
+"    catch
+"    endtry
+"endfunction
+"
+"call reanimate#hook(s:event)
+"unlet s:event
 
 

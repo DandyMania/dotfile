@@ -108,4 +108,5 @@ endfunction
 au VimLeave * if has("gui_running") | silent call SaveSizes() | endif
 " }
 
-
+"前回開いたフォルダをカレントに
+:set browsedir=last 

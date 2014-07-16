@@ -109,8 +109,8 @@ NeoBundle 'kannokanno/previm'
 NeoBundle 'tyru/open-browser.vim'
 
 " インテリセンス関連
-NeoBundleLazy 'Shougo/neosnippet.vim', {
-    \ "autoload": {"insert": 1}}
+"NeoBundleLazy 'Shougo/neosnippet.vim', {
+"    \ "autoload": {"insert": 1}}
 NeoBundleLazy 'Shougo/neocomplete.vim', {
     \ "autoload": {"insert": 1}}
 
@@ -568,8 +568,8 @@ if neobundle#is_installed('neocomplete')
 	let g:neocomplete#keyword_patterns._ = '\h\w*'
 	
 	" インサートモードで上下移動したときに引っかかるので
-	inoremap <expr><c-j> pumvisible() ? neocomplete#close_popup()."\<c-j>" : "\<c-j>"
-	inoremap <expr><c-k> pumvisible() ? neocomplete#close_popup()."\<c-k>" : "\<c-k>"
+	inoremap <expr><c-j> pumvisible() ? neocomplete#close_popup()."\<Up>" : "\<Up>"
+	inoremap <expr><c-k> pumvisible() ? neocomplete#close_popup()."\<Down>" : "\<Down>"
 	inoremap <expr><Up> pumvisible() ? neocomplete#close_popup()."\<Up>" : "\<Up>"
 	inoremap <expr><Down> pumvisible() ? neocomplete#close_popup()."\<Down>" : "\<Down>"
 

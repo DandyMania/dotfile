@@ -42,6 +42,9 @@ NeoBundle 'tyru/restart.vim'
 let g:restart_sessionoptions
     \ = 'blank,buffers,curdir,folds,help,localoptions,tabpages'
 
+" vimrcロード計測
+NeoBundle 'mattn/benchvimrc-vim'
+
 
 NeoBundle 'VimClojure'
 NeoBundle 'Shougo/vimshell'
@@ -72,7 +75,8 @@ NeoBundle 'hotchpotch/perldoc-vim'
 
 " poweshell
 NeoBundle 'PProvost/vim-ps1'
-NeoBundle 'cd01/poshcomplete-vim'
+"NeoBundle 'cd01/poshcomplete-vim'
+
 
 
 NeoBundle 'osyo-manga/vim-over'
@@ -120,11 +124,11 @@ NeoBundleLazy 'vim-jp/cpp-vim', {
             \ 'autoload' : {'filetypes' : 'cpp'}
             \ }
 
-NeoBundleLazy 'Rip-Rip/clang_complete', {
-    \ 'autoload' : {
-    \ 'filetypes' : ['c', 'cpp'],
-    \ },
-    \ }
+"NeoBundle 'Rip-Rip/clang_complete', {
+"   \ 'autoload' : {
+"    \ 'filetypes' : ['c', 'cpp'],
+"   \ },
+"    \ }
 
 "NeoBundle 'Shougo/neocomplcache.vim'
 " Install clang_complete
@@ -170,6 +174,8 @@ NeoBundle "scrooloose/syntastic", {
       \   "mac": ["pip install flake8", "npm -g install coffeelint"],
       \   "unix": ["pip install flake8", "npm -g install coffeelint"],
       \ }}
+
+NeoBundle "thinca/vim-template"
 
 
 "=====================================
@@ -570,8 +576,8 @@ if neobundle#is_installed('neocomplete')
 	" インサートモードで上下移動したときに引っかかるので
 	inoremap <expr><c-j> pumvisible() ? neocomplete#close_popup()."\<Up>" : "\<Up>"
 	inoremap <expr><c-k> pumvisible() ? neocomplete#close_popup()."\<Down>" : "\<Down>"
-	inoremap <expr><Up> pumvisible() ? neocomplete#close_popup()."\<Up>" : "\<Up>"
-	inoremap <expr><Down> pumvisible() ? neocomplete#close_popup()."\<Down>" : "\<Down>"
+	"inoremap <expr><Up> pumvisible() ? neocomplete#close_popup()."\<Up>" : "\<Up>"
+	"inoremap <expr><Down> pumvisible() ? neocomplete#close_popup()."\<Down>" : "\<Down>"
 
 	
 elseif neobundle#is_installed('neocomplcache')

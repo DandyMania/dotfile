@@ -120,9 +120,9 @@ NeoBundleLazy 'Shougo/neocomplete.vim', {
 
 
 " C/C++
-NeoBundleLazy 'vim-jp/cpp-vim', {
-            \ 'autoload' : {'filetypes' : 'cpp'}
-            \ }
+"NeoBundleLazy 'vim-jp/cpp-vim', {
+ "           \ 'autoload' : {'filetypes' : 'cpp'}
+  "          \ }
 
 "NeoBundle 'Rip-Rip/clang_complete', {
 "   \ 'autoload' : {
